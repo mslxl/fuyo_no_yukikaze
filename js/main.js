@@ -1,4 +1,3 @@
-const viewer = require('./lib/viewer')
 var config = {
     width: window.innerWidth,
     height: window.innerHeight,
@@ -10,4 +9,4 @@ var config = {
     opacity: 1,
     mobile: false
 }
-var v = new viewer.Viewer(config);
+var v = new Viewer(config);

@@ -1,4 +1,4 @@
-class Viewer {
+ class Viewer {
     constructor (config) {
         let width = config.width || 800
         let height = config.height || 600
