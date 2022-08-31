@@ -1,4 +1,7 @@
-var config = {
+require("jquery");
+let {Viewer} = require('./viewer.js')
+
+let config = {
     width: window.innerWidth,
     height: window.innerHeight,
     left: '0px',
@@ -9,4 +12,4 @@ var config = {
     opacity: 1,
     mobile: false
 }
-var v = new Viewer(config);
+let v = new Viewer(config);

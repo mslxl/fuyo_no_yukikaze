@@ -1,4 +1,8 @@
-class Viewer {
+let {L2D} = require('./l2d')
+let PIXI = require('../lib/pixi.js')
+let {LIVE2DCUBISMFRAMEWORK} = require('../lib/live2dcubismframework.js')
+
+export class Viewer {
     constructor(config) {
         let width = config.width || 800
         let height = config.height || 600
@@ -51,7 +55,9 @@ class Viewer {
         });
 
         window.onresize = (event) => {
-            if (event === void 0) { event = null; }
+            if (event === void 0) {
+                event = null;
+            }
 
             this.app.view.style.width = width + "px";
             this.app.view.style.height = height + "px";
@@ -93,7 +99,7 @@ class Viewer {
             if (this.isClick) {
 
                 console.log(self.model._animator.getLayer("base"))
-                if (self.model._animator.isPlaying&&self.model._animator.getLayer("base")._goalAnimation != 'idel') {
+                if (self.model._animator.isPlaying && self.model._animator.getLayer("base")._goalAnimation != 'idel') {
                     return;
                 }
                 if (this.isHit('TouchHead', event.offsetX, event.offsetY)) {
@@ -264,6 +270,7 @@ class Viewer {
         function test(needle) {
             return needle.test(UA);
         }
+
         var IsAndroid = test(/android|htc/) || /linux/i.test(NA.platform + "");
         var IsIPhone = !IsAndroid && test(/ipod|iphone/);
         var IsWinPhone = test(/windows phone/);
