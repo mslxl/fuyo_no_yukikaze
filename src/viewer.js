@@ -15,6 +15,7 @@ export class Viewer {
         let opa = config.opacity
         let mobile = config.mobile
 
+        this.lastPlayTime = 0
         if (!mobile) {
             if (this.isMobile()) return;
         }
@@ -88,18 +89,21 @@ export class Viewer {
                 this.model.pointerY = -mouse_y / this.app.view.width;
             }
         });
+        let self = this;
         this.app.view.addEventListener('mouseup', (event) => {
             if (!this.model) {
                 return;
             }
             this.isClick = true;
-            if (this.isClick) {
+            if (this.isClick && Date.now() - self.lastPlayTime > 5 * 1000) {
                 if (this.isHit('TouchHead', event.offsetX, event.offsetY)) {
                     this.startAnimation("touch_head", "base");
                 } else if (this.isHit('TouchSpecial', event.offsetX, event.offsetY)) {
-                    this.startAnimation("touch_special", "base");
+                    const bodyMotions = ["touch_special", "wedding"];
+                    let currentMotion = bodyMotions[Math.floor(Math.random()*bodyMotions.length)];
+                    this.startAnimation(currentMotion, "base");
                 } else {
-                    const bodyMotions = ["touch_body", "main_1", "main_2", "main_3"];
+                    const bodyMotions = ["touch_body", "main_1", "main_2", "main_3", "mail", "mission", "mission_complete", "complete"];
                     let currentMotion = bodyMotions[Math.floor(Math.random()*bodyMotions.length)];
                     this.startAnimation(currentMotion, "base");
                 }
@@ -142,6 +146,7 @@ export class Viewer {
         if (!this.animator.isPlaying) {
             let m = this.motions.get("idle");
             this.animator.getLayer("base").play(m);
+            console.log("Animation:", "idle", "base")
         }
         this._animator.updateAndEvaluate(deltaTime);
 
@@ -188,6 +193,8 @@ export class Viewer {
     }
 
     startAnimation(motionId, layerId) {
+        this.lastPlayTime = Date.now()
+        console.log("Play animation at", this.lastPlayTime)
         if (!this.model) {
             return;
         }
