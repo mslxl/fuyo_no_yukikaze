@@ -1,5 +1,5 @@
- class Viewer {
-    constructor (config) {
+class Viewer {
+    constructor(config) {
         let width = config.width || 800
         let height = config.height || 600
         let role = config.role
@@ -11,34 +11,34 @@
         let opa = config.opacity
         let mobile = config.mobile
 
-        if(!mobile){
-            if(this.isMobile()) return;
-        } 
+        if (!mobile) {
+            if (this.isMobile()) return;
+        }
         this.l2d = new L2D(config.basePath);
         this.canvas = $(".Canvas");
 
-        this.l2d.load(role, this);      
+        this.l2d.load(role, this);
         this.app = new PIXI.Application({
             width: width,
-            height: height, 
-            transparent: true, 
+            height: height,
+            transparent: true,
             antialias: true // 抗锯齿
         });
         this.canvas.html(this.app.view);
         this.canvas[0].style.position = 'fixed'
-        if(bg){
+        if (bg) {
             this.canvas[0].style.background = `url("${bg}")`
             this.canvas[0].style.backgroundSize = 'cover'
         }
-        if(opa)
+        if (opa)
             this.canvas[0].style.opacity = opa
-        if(top)
+        if (top)
             this.canvas[0].style.top = top
-        if(right)
+        if (right)
             this.canvas[0].style.right = right
-        if(bottom)
+        if (bottom)
             this.canvas[0].style.bottom = bottom
-        if(left)
+        if (left)
             this.canvas[0].style.left = left
 
         this.app.ticker.add((deltaTime) => {
@@ -50,13 +50,13 @@
             this.model.masks.update(this.app.renderer);
         });
 
-        window.onresize = (event) => {                 
+        window.onresize = (event) => {
             if (event === void 0) { event = null; }
 
             this.app.view.style.width = width + "px";
             this.app.view.style.height = height + "px";
             this.app.renderer.resize(width, height);
-            
+
             if (this.model) {
                 this.model.position = new PIXI.Point((width * 0.5), (height * 0.5));
                 this.model.scale = new PIXI.Point((this.model.position.x * 0.06), (this.model.position.x * 0.06));
@@ -84,19 +84,25 @@
                 this.model.pointerY = -mouse_y / this.app.view.width;
             }
         });
+        let self = this
         this.app.view.addEventListener('mouseup', (event) => {
             if (!this.model) {
                 return;
             }
             this.isClick = true;
             if (this.isClick) {
+
+                console.log(self.model._animator.getLayer("base"))
+                if (self.model._animator.isPlaying&&self.model._animator.getLayer("base")._goalAnimation != 'idel') {
+                    return;
+                }
                 if (this.isHit('TouchHead', event.offsetX, event.offsetY)) {
                     this.startAnimation("touch_head", "base");
                 } else if (this.isHit('TouchSpecial', event.offsetX, event.offsetY)) {
                     this.startAnimation("touch_special", "base");
                 } else {
                     const bodyMotions = ["touch_body", "main_1", "main_2", "main_3"];
-                    let currentMotion = bodyMotions[Math.floor(Math.random()*bodyMotions.length)];
+                    let currentMotion = bodyMotions[Math.floor(Math.random() * bodyMotions.length)];
                     this.startAnimation(currentMotion, "base");
                 }
             }
@@ -107,7 +113,7 @@
         console.log("Init finished.")
     }
 
-    changeCanvas (model) {
+    changeCanvas(model) {
         this.app.stage.removeChildren();
 
         model.motions.forEach((value, key) => {
@@ -133,9 +139,8 @@
         window.onresize();
     }
 
-    onUpdate (delta) {
+    onUpdate(delta) {
         let deltaTime = 0.016 * delta;
-
         if (!this.animator.isPlaying) {
             let m = this.motions.get("idle");
             this.animator.getLayer("base").play(m);
@@ -184,14 +189,14 @@
         this._coreModel.drawables.resetDynamicFlags();
     }
 
-    startAnimation (motionId, layerId) {
+    startAnimation(motionId, layerId) {
         if (!this.model) {
             return;
         }
         console.log("Animation:", motionId, layerId)
         let m = this.model.motions.get(motionId);
         // console.log("motionId:", m)
-        
+
         if (!m) {
             return;
         }
@@ -205,7 +210,7 @@
         l.play(m);
     }
 
-    isHit (id, posX, posY) {
+    isHit(id, posX, posY) {
         if (!this.model) {
             return false;
         }
@@ -250,15 +255,15 @@
         return ((left <= tx) && (tx <= right) && (top <= ty) && (ty <= bottom));
     }
 
-    isMobile(){
+    isMobile() {
         var WIN = window;
         var LOC = WIN["location"];
         var NA = WIN.navigator;
         var UA = NA.userAgent.toLowerCase();
 
         function test(needle) {
-          return needle.test(UA);
-        }        
+            return needle.test(UA);
+        }
         var IsAndroid = test(/android|htc/) || /linux/i.test(NA.platform + "");
         var IsIPhone = !IsAndroid && test(/ipod|iphone/);
         var IsWinPhone = test(/windows phone/);
