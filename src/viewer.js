@@ -55,9 +55,7 @@ export class Viewer {
         });
 
         window.onresize = (event) => {
-            if (event === void 0) {
-                event = null;
-            }
+            if (event === void 0) { event = null; }
 
             this.app.view.style.width = width + "px";
             this.app.view.style.height = height + "px";
@@ -90,25 +88,19 @@ export class Viewer {
                 this.model.pointerY = -mouse_y / this.app.view.width;
             }
         });
-        let self = this
         this.app.view.addEventListener('mouseup', (event) => {
             if (!this.model) {
                 return;
             }
             this.isClick = true;
             if (this.isClick) {
-
-                console.log(self.model._animator.getLayer("base"))
-                if (self.model._animator.isPlaying && self.model._animator.getLayer("base")._goalAnimation != 'idel') {
-                    return;
-                }
                 if (this.isHit('TouchHead', event.offsetX, event.offsetY)) {
                     this.startAnimation("touch_head", "base");
                 } else if (this.isHit('TouchSpecial', event.offsetX, event.offsetY)) {
                     this.startAnimation("touch_special", "base");
                 } else {
                     const bodyMotions = ["touch_body", "main_1", "main_2", "main_3"];
-                    let currentMotion = bodyMotions[Math.floor(Math.random() * bodyMotions.length)];
+                    let currentMotion = bodyMotions[Math.floor(Math.random()*bodyMotions.length)];
                     this.startAnimation(currentMotion, "base");
                 }
             }
@@ -270,7 +262,6 @@ export class Viewer {
         function test(needle) {
             return needle.test(UA);
         }
-
         var IsAndroid = test(/android|htc/) || /linux/i.test(NA.platform + "");
         var IsIPhone = !IsAndroid && test(/ipod|iphone/);
         var IsWinPhone = test(/windows phone/);
